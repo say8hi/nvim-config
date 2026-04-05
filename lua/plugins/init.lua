@@ -1,5 +1,13 @@
 return {
   {
+    "Wansmer/langmapper.nvim",
+    lazy = false,
+    priority = 1001, -- load before other plugins
+    opts = {
+      hack_keymap = true,
+    },
+  },
+  {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
@@ -278,13 +286,7 @@ return {
     "kylechui/nvim-surround",
     version = "*",
     event = { "BufReadPost", "BufNewFile" },
-    config = function()
-      require("nvim-surround").setup {
-        keymaps = {
-          visual = "S",
-        },
-      }
-    end,
+    opts = {},
   },
   {
     "nvim-telescope/telescope.nvim",
@@ -729,6 +731,10 @@ return {
     opts = {
       preset = "modern",
       delay = 500,
+      filter = function(map)
+        -- hide mappings with Cyrillic characters
+        return not map.lhs:match "[\128-\255]"
+      end,
     },
     keys = {
       {
@@ -755,6 +761,21 @@ return {
     event = "UIEnter",
     dependencies = "nvim-tree/nvim-web-devicons",
     opts = {
+      highlights = {
+        background        = { bg = "#1f2335" },
+        fill              = { bg = "#13141e" },
+        buffer_selected   = { bg = "#1a1b26", bold = true },
+        buffer_visible    = { bg = "#1f2335" },
+        separator         = { bg = "#1f2335", fg = "#13141e" },
+        separator_selected= { bg = "#1a1b26", fg = "#13141e" },
+        separator_visible = { bg = "#1f2335", fg = "#13141e" },
+        close_button      = { bg = "#1f2335" },
+        close_button_selected = { bg = "#1a1b26" },
+        close_button_visible  = { bg = "#1f2335" },
+        modified          = { bg = "#1f2335" },
+        modified_selected = { bg = "#1a1b26" },
+        modified_visible  = { bg = "#1f2335" },
+      },
       options = {
         mode = "buffers", -- show buffers
         numbers = "none",
@@ -787,8 +808,16 @@ return {
         offsets = {
           {
             filetype = "NvimTree",
-            text = "File Explorer",
+            text = function()
+              local api = require "nvim-tree.api"
+              local root = api.tree.get_nodes().absolute_path
+              if root then
+                return vim.fn.fnamemodify(root, ":~")
+              end
+              return ""
+            end,
             text_align = "center",
+            highlight = "Title",
             separator = true,
           },
         },
@@ -799,7 +828,7 @@ return {
         show_tab_indicators = true,
         show_duplicate_prefix = true,
         persist_buffer_sort = true,
-        separator_style = "thin",
+        separator_style = "slant",
         enforce_regular_tabs = false,
         always_show_bufferline = true,
         hover = {

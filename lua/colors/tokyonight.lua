@@ -91,15 +91,73 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, "Repeat", { fg = colors.purple })
   vim.api.nvim_set_hl(0, "Define", { fg = colors.blue })
 
+  -- Bufferline
+  local bl_bg          = "#1f2335"
+  local bl_bg_sel      = "#1a1b26"
+  local bl_fill        = "#13141e"
+
+  vim.api.nvim_set_hl(0, "BufferLineBackground",             { fg = "#787c99", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineFill",                   { bg = bl_fill })
+  vim.api.nvim_set_hl(0, "BufferLineBufferSelected",         { fg = "#c0caf5", bg = bl_bg_sel, bold = true })
+  vim.api.nvim_set_hl(0, "BufferLineBufferVisible",          { fg = "#a9b1d6", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineSeparator",              { fg = bl_fill,   bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineSeparatorSelected",      { fg = bl_fill,   bg = bl_bg_sel })
+  vim.api.nvim_set_hl(0, "BufferLineSeparatorVisible",       { fg = bl_fill,   bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineCloseButton",            { fg = "#787c99", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineCloseButtonSelected",    { fg = "#c0caf5", bg = bl_bg_sel })
+  vim.api.nvim_set_hl(0, "BufferLineCloseButtonVisible",     { fg = "#a9b1d6", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineModified",               { fg = "#e0af68", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineModifiedSelected",       { fg = "#e0af68", bg = bl_bg_sel })
+  vim.api.nvim_set_hl(0, "BufferLineModifiedVisible",        { fg = "#e0af68", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineDiagnostic",             { fg = "#787c99", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineDiagnosticSelected",     { fg = "#a9b1d6", bg = bl_bg_sel })
+  vim.api.nvim_set_hl(0, "BufferLineError",                  { fg = "#f7768e", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineErrorSelected",          { fg = "#f7768e", bg = bl_bg_sel })
+  vim.api.nvim_set_hl(0, "BufferLineErrorDiagnostic",        { fg = "#f7768e", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineErrorDiagnosticSelected",{ fg = "#f7768e", bg = bl_bg_sel })
+  vim.api.nvim_set_hl(0, "BufferLineWarning",                { fg = "#e0af68", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineWarningSelected",        { fg = "#e0af68", bg = bl_bg_sel })
+  vim.api.nvim_set_hl(0, "BufferLineWarningDiagnostic",      { fg = "#e0af68", bg = bl_bg })
+  vim.api.nvim_set_hl(0, "BufferLineWarningDiagnosticSelected",{ fg = "#e0af68", bg = bl_bg_sel })
+
+  -- Diff highlights (native Neovim diff / claudecode.nvim)
+  vim.api.nvim_set_hl(0, "DiffAdd",    { bg = "#1e3a2f", fg = "#9ece6a" })
+  vim.api.nvim_set_hl(0, "DiffDelete", { bg = "#3b1e28", fg = "#f7768e" })
+  vim.api.nvim_set_hl(0, "DiffChange", { bg = "#1e2d45" })
+  vim.api.nvim_set_hl(0, "DiffText",   { bg = "#2a3f6a", bold = true })
+
   -- Telescope custom
   vim.api.nvim_set_hl(0, "TelescopeSelection", { bg = colors.one_bg, fg = colors.blue })
 end
 
+local function fix_bufferline_devicons()
+  local bl_bg     = "#1f2335"
+  local bl_bg_sel = "#1a1b26"
+  for _, hl in ipairs(vim.fn.getcompletion("BufferLineDevIcon", "highlight")) do
+    local ok, existing = pcall(vim.api.nvim_get_hl, 0, { name = hl, link = false })
+    if ok and existing then
+      local bg = hl:match "Selected$" and bl_bg_sel or bl_bg
+      vim.api.nvim_set_hl(0, hl, { fg = existing.fg, bg = bg })
+    end
+  end
+end
+
 apply_custom_highlights()
+fix_bufferline_devicons()
 
 vim.api.nvim_create_autocmd("ColorScheme", {
   pattern = "*",
-  callback = apply_custom_highlights,
+  callback = function()
+    apply_custom_highlights()
+    fix_bufferline_devicons()
+  end,
+})
+
+-- fix devicons after bufferline initializes and on each new buffer
+vim.api.nvim_create_autocmd({ "UIEnter", "BufAdd" }, {
+  callback = function()
+    vim.schedule(fix_bufferline_devicons)
+  end,
 })
 
 return {
