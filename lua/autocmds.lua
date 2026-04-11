@@ -101,4 +101,3 @@ autocmd("FileType", {
     vim.wo.foldenable = true
   end,
 })
-
