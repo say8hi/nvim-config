@@ -761,21 +761,6 @@ return {
     event = "UIEnter",
     dependencies = "nvim-tree/nvim-web-devicons",
     opts = {
-      highlights = {
-        background        = { bg = "#1f2335" },
-        fill              = { bg = "#13141e" },
-        buffer_selected   = { bg = "#1a1b26", bold = true },
-        buffer_visible    = { bg = "#1f2335" },
-        separator         = { bg = "#1f2335", fg = "#13141e" },
-        separator_selected= { bg = "#1a1b26", fg = "#13141e" },
-        separator_visible = { bg = "#1f2335", fg = "#13141e" },
-        close_button      = { bg = "#1f2335" },
-        close_button_selected = { bg = "#1a1b26" },
-        close_button_visible  = { bg = "#1f2335" },
-        modified          = { bg = "#1f2335" },
-        modified_selected = { bg = "#1a1b26" },
-        modified_visible  = { bg = "#1f2335" },
-      },
       options = {
         mode = "buffers", -- show buffers
         numbers = "none",

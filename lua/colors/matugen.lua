@@ -1,24 +1,32 @@
 -- Matugen theme for mini.base16
 
 local base16 = require('mini.base16')
+local shared = require('colors._shared')
+
+local diff_palette = {
+  add    = { bg = '#705c73', fg = '#ffffff' },
+  delete = { bg = '#93000a', fg = '#ffdad6' },
+  change = { bg = '#536478' },
+  text   = { bg = '#414750' },
+}
 
 -- Base16 palette from matugen
 local palette = {
-  base00 = '#131313', -- background
-  base01 = '#131313', -- lighter background
-  base02 = '#131313', -- selection
-  base03 = '#474747', -- comments, line numbers
-  base04 = '#c6c6c6', -- dark foreground
-  base05 = '#e2e2e2', -- foreground
-  base06 = '#efefef', -- light foreground
-  base07 = '#fcfcfc', -- lightest
+  base00 = '#131315', -- background
+  base01 = '#131315', -- lighter background
+  base02 = '#131315', -- selection
+  base03 = '#44474c', -- comments, line numbers
+  base04 = '#c4c6cd', -- dark foreground
+  base05 = '#e4e2e3', -- foreground
+  base06 = '#f0eff0', -- light foreground
+  base07 = '#fdfcfd', -- lightest
   base08 = '#ffb4ab', -- red (variables, errors)
-  base09 = '#adadad', -- orange
-  base0A = '#c6c6c6', -- yellow
-  base0B = '#e2e2e2', -- green (strings)
-  base0C = '#5e5e5e', -- cyan (operators)
-  base0D = '#ffffff', -- blue (functions)
-  base0E = '#5e5e5e', -- purple (keywords)
+  base09 = '#a4adbb', -- orange
+  base0A = '#c1c7d1', -- yellow
+  base0B = '#d8bfd9', -- green (strings)
+  base0C = '#d2e4fc', -- cyan (operators)
+  base0D = '#b6c8df', -- blue (functions)
+  base0E = '#f4daf6', -- purple (keywords)
   base0F = '#ffcbc5', -- brown
 }
 
@@ -35,21 +43,21 @@ vim.g.colors_name = 'matugen'
 
 -- Custom highlight colors
 local colors = {
-  white = '#e2e2e2',
-  darker_black = '#1f1f1f',
-  black = '#121212',
-  black2 = '#131313',
-  one_bg = '#131313',
-  grey = '#474747',
+  white = '#e4e2e3',
+  darker_black = '#1f2021',
+  black = '#131314',
+  black2 = '#131315',
+  one_bg = '#131315',
+  grey = '#44474c',
   red = '#ffb4ab',
-  pink = '#5e5e5e',
-  green = '#e2e2e2',
-  blue = '#ffffff',
-  orange = '#adadad',
-  cyan = '#6b6b6b',
-  teal = '#5e5e5e',
-  purple = '#515151',
-  lavender = '#787878',
+  pink = '#f4daf6',
+  green = '#d8bfd9',
+  blue = '#b6c8df',
+  orange = '#a4adbb',
+  cyan = '#eaf2fe',
+  teal = '#d2e4fc',
+  purple = '#eec5f1',
+  lavender = '#ffffff',
 }
 
 local function apply_custom_highlights()
@@ -90,6 +98,8 @@ local function apply_custom_highlights()
   vim.api.nvim_set_hl(0, 'StorageClass', { fg = colors.purple })
   vim.api.nvim_set_hl(0, 'Repeat', { fg = colors.purple })
   vim.api.nvim_set_hl(0, 'Define', { fg = colors.blue })
+
+  shared.apply_diff(diff_palette)
 
   -- Telescope custom
   vim.api.nvim_set_hl(0, 'TelescopeSelection', { bg = colors.one_bg, fg = colors.blue })
