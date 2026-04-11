@@ -732,7 +732,8 @@ return {
       preset = "modern",
       delay = 500,
       filter = function(map)
-        -- hide mappings with Cyrillic characters
+        -- hide mappings with non-ASCII bytes (e.g. Cyrillic duplicates
+        -- that langmapper auto-generates via hack_keymap)
         return not map.lhs:match "[\128-\255]"
       end,
     },
