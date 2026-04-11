@@ -51,7 +51,7 @@ base16.setup({
   },
 })
 
-vim.g.colors_name = 'matugen'
+vim.g.colors_name = 'autumn'
 
 -- Custom highlight colors
 local colors = {
